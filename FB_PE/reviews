@@ -1,0 +1,119 @@
+//1. Continuous Subarray Sum
+class Solution {
+public:
+    bool checkSubarraySum(vector<int>& nums, int k) {
+        int n = nums.size(), sum = 0;
+        unordered_map<int, int> m{{0,-1}};
+        for (int i = 0; i < n; ++i) {
+            sum += nums[i];
+            int t = (k == 0) ? sum : (sum % k);
+            if (m.count(t)) {
+                if (i - m[t] > 1) return true;
+            } else m[t] = i;
+        }
+        return false;
+    }
+};
+
+// 若数字a和b分别除以数字c，若得到的余数相同，那么(a-b)必定能够整除c
+// 当前的累加和除以k得到的余数在set中已经存在了，那么说明之前必定有一段子数组和可以整除k
+
+416 Partition Equal Subset Sum
+public:
+    bool canPartition(vector<int>& nums) {
+        int sum = 0, n = nums.size();
+        for(int a:nums) sum+=a;
+        if(sum % 2 != 0) return false;
+        
+        //dp[i, j] := whether compose value j at (0....(i-1)th) item;
+        // base case: dp[0][0] = true: not select any element given sum 0 
+        // dp[1][j] given 0th element
+        vector<vector<bool>> dp(n+1, vector<bool>(sum/2+1, false));
+        dp[0][0] = true;
+        for(int i=1; i<=n; i++) {
+            for(int j=1; j<=sum/2; j++) {
+                // don't select ith element
+                dp[i][j] = dp[i-1][j];
+                if(nums[i-1] <= j) {
+                    dp[i][j] = dp[i-1][j] || dp[i-1][j-nums[i-1]];
+                }
+            }
+        }
+        return dp[n][sum/2];
+    }
+
+419 Battleships in a Board 平板上的战船
+    int countBattleships(vector<vector<char>>& board) {
+        if (board.empty() || board[0].empty()) return 0;
+        int res = 0, m = board.size(), n = board[0].size();
+        for (int i = 0; i < m; ++i) {
+            for (int j = 0; j < n; ++j) {
+                if (board[i][j] == '.' || (i > 0 && board[i - 1][j] == 'X') || (j > 0 && board[i][j - 1] == 'X')) continue;
+                ++res;
+            }
+        }
+        return res;
+    }
+
+438 Find All Anagrams in a String
+    vector<int> findAnagrams(string s, string p) {
+        vector<int> ms(26);
+        vector<int> mp(26);
+         vector<int> res;
+        int n1 = s.size(), n2 = p.size();
+        if(n1 < n2) return res;
+        for(int i=0; i<n2; i++) {
+            ms[s[i] - 'a']++; 
+            mp[p[i] - 'a']++; 
+        }
+        if(ms == mp) res.push_back(0);;
+        for(int i=n2; i< n1; i++) {
+            ms[s[i] - 'a']++;
+            ms[s[i-n2] - 'a']--;
+            if(ms == mp) {
+                res.push_back(i-n2+1);
+            }
+        }
+        return res;
+        
+    }
+
+Alien Dictionary
+topo sort
+前面的字母neighbor push_back 后面的
+
+973. K Closest Points to Origin
+
+283 move zeros
+public void moveZeroes(int[] nums) {
+    if (nums == null || nums.length == 0) return;        
+
+    int insertPos = 0;
+    for (int num: nums) {
+        if (num != 0) nums[insertPos++] = num;
+    }        
+
+    while (insertPos < nums.length) {
+        nums[insertPos++] = 0;
+    }
+}
+
+238 Product of Array Except Self
+
+    vector<int> productExceptSelf(vector<int>& nums) {
+        int n = nums.size();
+        vector<int> fwd(n, 1);
+        vector<int> bwd(n, 1);
+        vector<int> res(n, 1);
+        for(int i=0; i<n-1; i++) {
+            fwd[i+1] = fwd[i] * nums[i];
+        }
+        for(int i=n-2; i>=0; i--) {
+            bwd[i] = bwd[i+1] * nums[i+1];
+        }
+        
+        for(int i=0; i<n; i++) {
+            res[i] = fwd[i] * bwd[i];
+        }
+        return res;
+    }

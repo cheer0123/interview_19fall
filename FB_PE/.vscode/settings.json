@@ -1,0 +1,13 @@
+{
+    "files.associations": {
+        "string": "cpp",
+        "vector": "cpp",
+        "algorithm": "cpp",
+        "random": "cpp",
+        "fstream": "cpp",
+        "__hash_table": "cpp",
+        "unordered_map": "cpp",
+        "string_view": "cpp",
+        "iosfwd": "cpp"
+    }
+}
